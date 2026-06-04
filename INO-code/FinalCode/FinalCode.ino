@@ -33,60 +33,59 @@ const int pressureSensor = A0;
 const int triggerPin = A4;
 
 // ===== STEPPER SETTINGS =====
-const float stepsPerRevolution = 400.0; // steps per revolution (half-step A4988)
-const int moveDelay1 = 300;             // us per step — gantry stepper speed
-const int moveDelay2 = 400;             // us per step — substrate gripper speed
-const int slowDelay  = 500;             // us per step — homing speed (slower for accuracy)
-const int safeOffset = 80;              // steps to back off from limit switch after homing
+const float stepsPerRevolution = 400.0; // steps per revolution for steppers
+const int moveDelay1 = 300;             // gantry movement speed
+const int moveDelay2 = 300;             // substrate gripper movement speed
+const int slowDelay  = 500;             // gantry and substrate homing speed
+const int safeOffset = 80;              // offset from microswitches
 
 // ===== USED PLUG CALIBRATION =====
-const float plug_stepper1_downRounds = 10.2;                        // rounds down to reach used substrate
-const float plug_stepper2_diglength  = 3.75;                         // physical dig length in cm
-const float plug_stepper2_digRounds  = plug_stepper2_diglength / 0.8; // converted to motor rounds
+const float plug_stepper1_downRounds = 10.2;                          // rounds down to pick used substrate
+const float plug_stepper2_diglength  = 3.75;                           // [cm] dig length
+const float plug_stepper2_digRounds  = plug_stepper2_diglength / 0.8; // substrate gripper dig depth for used substrate
 
 // ===== NEW PLUG & SEED CALIBRATION =====
-const float stepper1_firstDownRounds  = 10.0;                      // rounds down to pick new substrate
-const float stepper1_secondDownRounds = 10.0;                      // rounds down to place new substrate
-const float stepper1_upRounds         = 3.0;                       // rounds up after seed pickup before moving
-const float stepper1_thirdDownRounds  = 5.0;                       // rounds down to deposit seed
-const float stepper2_downLength       = 2;                         // dig lenth for 
-const float stepper2_downRounds       = stepper2_downLength / 0.8; // rounds for substrate gripper on new plug
+const float stepper1_firstDownRounds  = 10.0; // rounds down to pick unused substrate
+const float stepper1_secondDownRounds = 10.0; // rounds down to place unused substrate
+const float stepper1_upRounds         = 3.0;  // rounds up after picking seed
+const float stepper1_thirdDownRounds  = 5.0;  // rounds down to drop-off seed
+const float stepper2_downRounds       = 2.0;  // substrate gripper dig for unused substrate
 
 // ===== CUTTING SERVO CALIBRATION =====
-const int cuttingStartAngle = 30;  // resting/home angle for root cutter
-const int cuttingEndAngle   = 150; // cutting stroke end angle
-const int cuttingPauseMs    = 500; // ms to hold at each end of stroke
+const int cuttingStartAngle = 30;  // resting angle for cutter
+const int cuttingEndAngle   = 150; // end angle for cutter
+const int cuttingPauseMs    = 500; // resting time for cutter
 
 // ===== GANTRY SERVO CALIBRATION =====
-const int gantryHomingSpeed   = 10;  // ms per degree during homing sweep
+const int gantryHomingSpeed   = 10;  // ms pause per degree during homing sweep
 const int gantrySafeOffset    = 23;  // degrees to back off after switch triggers
 const int gantryHomeAngle     = 23;  // startup write angle before homing
-const int gantryRestAngle     = 0;   // rest/home position relative to zero
-const int gantryDiscardAngle  = 160; // position for discarding used plug
-const int gantrySeedPick      = 90;  // position for seed deposit
-const int gantrySubstratePick = 160; // position for picking new substrate
-const int gantryMinDelay      = 2;   // ms per degree at peak speed 
-const int gantryMaxDelay      = 10;  // ms per degree at start and end of sweep
+const int gantryRestAngle     = 0;   // rest position relative to zero
+const int gantryDiscardAngle  = 160; // angle of dropping substrate
+const int gantrySeedPick      = 120;  // seed drop-off position
+const int gantrySubstratePick = 160; // angle for picking new substrate
+const int gantryMinDelay      = 2;   // ms per degree at peak speed
+const int gantryMaxDelay      = 10;  // ms per degree at start/end
 
 // ===== GRIPPER SERVO CALIBRATION =====
-const int gripperHomingSpeed = 15; // ms per degree during homing
-const int gripperSafeOffset  = 5;  // degrees back from switch = zero reference
-const int gripperOpenAngle   = 80; // degrees from zero = fully open
-const int gripperGripAngle   = 25; // degrees from zero = gripping position
+const int gripperHomingSpeed = 15; // ms per degree for homing gripper
+const int gripperSafeOffset  = 5;  // offset from trigger switch
+const int gripperOpenAngle   = 80; // open gripper position
+const int gripperGripAngle   = 25; // angle for gripping substrate plug
 
 // ===== PRESSURE CALIBRATION =====
-const float V_MIN                   = 0.1727; // sensor zero-pressure voltage offset
-const float V_RANGE                 = 4.5;    // sensor full-scale voltage range
-const float P_MAX                   = 500.0;  // sensor full-scale pressure in kPa
-const float pressureClogLimit       = 40.0;   // kPa — clog test must stay BELOW this
-const float pressurePickedThreshold = 50.0;   // kPa — must exceed to confirm seed picked
-const float pressureDropThreshold   = 50.0;   // kPa — must stay above while pump running
-const float pressureAlpha           = 0.1;    // EMA smoothing factor (0=no update, 1=no smoothing)
-const int   clogTestDuration        = 5000;   // ms to run pump during clog test
+const float V_MIN                   = 0.1727; // pressure offset
+const float V_RANGE                 = 4.5;    // operating range of sensor
+const float P_MAX                   = 500.0;  // maximum pressure measurement
+const float pressureClogLimit       = 40.0;   // threshold for clog test
+const float pressurePickedThreshold = 50.0;   // threshold for pickup sensing
+const float pressureDropThreshold   = 50.0;   // threshold for dropped seed
+const float pressureAlpha           = 0.1;    // smoothing factor
+const int   clogTestDuration        = 5000;   // duration of clog test
 
 // ===== SEED PICKUP RETRY =====
 const int          seedPickupRetries = 2;     // extra attempts after first failure
-const unsigned long pickupWait       = 4000;  // ms to wait stationary before oscillating
+const unsigned long pickupWait       = 4000;  // ms to wait before oscillating
 const unsigned long pickupMax        = 10000; // ms total per attempt before giving up
 
 // ===== OBJECTS =====
@@ -129,6 +128,7 @@ void stepMotor(int sPin, int delayVal) {
 }
 
 // Moves a stepper a fixed number of steps without position tracking or switch checking.
+
 void moveStepsRaw(int sPin, int dPin, long steps, bool dirUp, int delayVal, int enPin) {
   if (steps <= 0) return;
   digitalWrite(enPin, LOW);
@@ -140,6 +140,7 @@ void moveStepsRaw(int sPin, int dPin, long steps, bool dirUp, int delayVal, int 
 }
 
 // Moves stepper 1 by the given number of steps while tracking absolute position.
+// On every upward step, checks the limit switch — if triggered unexpectedly,
 void moveStepper1(long steps, bool dirUp) {
   if (steps <= 0) return;
   digitalWrite(enablePin1, LOW);
@@ -162,6 +163,8 @@ void moveStepper1(long steps, bool dirUp) {
 }
 
 // Moves stepper 2 by the given number of steps while tracking absolute position.
+// On every upward step, checks the limit switch
+
 void moveStepper2(long steps, bool dirUp) {
   if (steps <= 0) return;
   digitalWrite(enablePin2, LOW);
@@ -183,21 +186,21 @@ void moveStepper2(long steps, bool dirUp) {
   digitalWrite(enablePin2, HIGH);
 }
 
-// Returns stepper 1 exactly as many steps upward as it currently is below home, then resets position tracker to zero. Guarantees no overshoot.
+// Returns stepper 1 exactly as many steps upward as it currently is below home, then resets position tracker to zero
 void returnStepper1() {
   if (stepper1Pos <= 0) return;
   moveStepper1(stepper1Pos, true);
   stepper1Pos = 0;
 }
 
-// Returns stepper 2 exactly as many steps upward as it currently is below home, then resets position tracker to zero. Guarantees no overshoot.
+// Returns stepper 2 exactly as many steps upward as it currently is below home, then resets position tracker to zero.
 void returnStepper2() {
   if (stepper2Pos <= 0) return;
   moveStepper2(stepper2Pos, true);
   stepper2Pos = 0;
 }
 
-// Drives stepper toward limit switch, waits for trigger, backs off safeOffset steps, and sets position tracker to safeOffset 
+// Drives stepper toward limit switch, waits for trigger, backs off safeOffset steps, and sets position tracker to safeOffset
 void homeStepper(int sPin, int dPin, int sw, int enPin, bool &homedFlag, long &posTracker) {
   digitalWrite(enPin, LOW);
   if (digitalRead(sw) == LOW) {
@@ -212,8 +215,8 @@ void homeStepper(int sPin, int dPin, int sw, int enPin, bool &homedFlag, long &p
   homedFlag = true;
 }
 
+// Blocks execution until the physical trigger button is pressed and released. with debounce
 
-// Blocks execution until the physical trigger button is pressed and released.
 void waitForPress(const char* message) {
   Serial.println(message);
   while (digitalRead(triggerPin) == LOW);
@@ -223,12 +226,12 @@ void waitForPress(const char* message) {
 
 // ===== PRESSURE =====
 
-// Converts smoothed ADC voltage to absolute pressure in kPa
+// Converts ADC voltage to absolute pressure in kPa using sensor-specific offset and range constants.
 float voltageToPressure(float voltage) {
   return ((voltage - V_MIN) / V_RANGE) * P_MAX;
 }
 
-// Reads raw ADC, applies exponential moving average smoothing
+// Reads ADC, applies exponential moving average smoothing, converts to voltage then to kPa and returns the result.
 float readPressure() {
   int raw = analogRead(pressureSensor);
   pressureSmoothed = pressureAlpha * raw + (1.0 - pressureAlpha) * pressureSmoothed;
@@ -237,7 +240,7 @@ float readPressure() {
 }
 
 // Runs pump for clogTestDuration ms and monitors pressure.
-
+// If pressure exceeds pressureClogLimit the program halts: blockage .
 void runClogTest() {
   pressureSmoothed = analogRead(pressureSensor);
   digitalWrite(pumpPin, HIGH);
@@ -262,7 +265,11 @@ void runClogTest() {
   digitalWrite(pumpPin, LOW);
 }
 
-// Drives gantry servo toward decreasing angle until limit switch triggers
+// ===== GANTRY SERVO =====
+
+// Drives gantry servo toward decreasing angle until limit switch triggers,
+// then backs off gantrySafeOffset degrees.
+
 void homeGantry() {
   int angle = gantryServo.read();
 
@@ -271,8 +278,11 @@ void homeGantry() {
     if (angle < 0) {
       angle = 0;
       gantryServo.write(0);
-      Serial.println("ERROR: Gantry switch not found. Check wiring and reset.");
-      while (true);
+      Serial.println("WARNING: Gantry switch not found. Using angle 0 as reference.");
+      delay(300);
+      gantryZero = 0;
+      moveGantryTo(gantryHomeAngle);
+      return;
     }
     gantryServo.write(angle);
     delay(gantryHomingSpeed);
@@ -282,9 +292,12 @@ void homeGantry() {
   gantryServo.write(angle);
   delay(300);
   gantryZero = angle;
+
+  moveGantryTo(gantryHomeAngle);
 }
 
-// Moves gantry servo to a position expressed as degrees from gantryZero.
+// Moves gantry servo to a position expressed as degrees from gantryZero. Uses a sinusoidal speed profile
+
 void moveGantryTo(int degreesFromZero) {
   int target  = clampAngle(gantryZero + degreesFromZero);
   int current = gantryServo.read();
@@ -303,7 +316,8 @@ void moveGantryTo(int degreesFromZero) {
 
 // ===== GRIPPER SERVO =====
 
-// Drives gripper servo toward increasing angle until limit switch triggers
+// Drives gripper servo toward increasing angle until limit switch triggers, then backs off gripperSafeOffset degrees. 
+
 void homeGripper() {
   int angle = gripperServo.read();
 
@@ -312,8 +326,8 @@ void homeGripper() {
     if (angle > 180) {
       angle = 180;
       gripperServo.write(angle);
-      Serial.println("ERROR: Gripper switch not found. Check wiring and reset.");
-      while (true);
+      Serial.println("WARNING: Gripper switch not found.");
+      break;
     }
     gripperServo.write(angle);
     delay(gripperHomingSpeed);
@@ -325,7 +339,8 @@ void homeGripper() {
   gripperZero = angle;
 }
 
-// Moves gripper to a position expressed as degrees subtracted from gripperZero.
+// Moves gripper to a position expressed as degrees subtracted from gripperZero
+
 void moveGripperTo(int degreesFromZero, int msPerDegree = 10) {
   int target  = clampAngle(gripperZero - degreesFromZero);
   int current = gripperServo.read();
@@ -340,29 +355,22 @@ void moveGripperTo(int degreesFromZero, int msPerDegree = 10) {
 
 // ===== CUTTING SERVO =====
 
-// Executes five full cutting strokes
+// Executes five full cutting strokes by sweeping between cuttingStartAngle and cuttingEndAngle
 void performCut() {
-  cuttingServo.write(cuttingStartAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingEndAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingStartAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingEndAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingStartAngle);
-  cuttingServo.write(cuttingEndAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingStartAngle);
-  cuttingServo.write(cuttingEndAngle);
-  delay(cuttingPauseMs);
-  cuttingServo.write(cuttingStartAngle);
-  cuttingServo.write(cuttingEndAngle);
-  delay(cuttingPauseMs);
+  cuttingServo.write(cuttingStartAngle); delay(cuttingPauseMs);
+  cuttingServo.write(cuttingEndAngle);   delay(cuttingPauseMs);
+  cuttingServo.write(cuttingStartAngle); delay(cuttingPauseMs);
+  cuttingServo.write(cuttingEndAngle);   delay(cuttingPauseMs);
+  cuttingServo.write(cuttingStartAngle); delay(cuttingPauseMs);
+  cuttingServo.write(cuttingEndAngle);   delay(cuttingPauseMs);
+  cuttingServo.write(cuttingStartAngle); delay(cuttingPauseMs);
+  cuttingServo.write(cuttingEndAngle);   delay(cuttingPauseMs);
   cuttingServo.write(cuttingStartAngle);
 }
 
-// Called on any unrecoverable error (seed lost, pickup timeout).
+// ===== EMERGENCY HOME =====
+
+// Called on any unrecoverable error. Stops pump, re-homes both steppers via limit switches
 void goToHome() {
   digitalWrite(pumpPin, LOW);
   pumpActive = false;
@@ -375,8 +383,8 @@ void goToHome() {
 
 // ===== SEED PICKUP =====
 
+// Single pickup attempt. Waits pickupWait ms stationary for pressure to rise.
 
-// If no pickup, oscillates stepper 1 up and down 0.5 rounds repeatedly until pressure threshold is met or pickupMax ms elapses. Returns true on success.
 bool tryPickupSeed() {
   unsigned long start = millis();
 
@@ -406,7 +414,7 @@ void waitForSeedPickup() {
   while (true);
 }
 
-// Reads current pressure and triggers emergency home if it has dropped below pressureDropThreshold
+// Reads pressure and triggers emergency home if below pressureDropThreshold, indicating seed was lost during transport.
 void checkPressureOrHome() {
   float p = readPressure();
   if (p < pressureDropThreshold) {
@@ -442,14 +450,14 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
 
-  delay(500);
+  delay(100);
   gantryServo.attach(gantryServoPin);
   gripperServo.attach(gripperServoPin);
   cuttingServo.attach(cuttingServoPin);
   gantryServo.write(gantryHomeAngle);
   gripperServo.write(90);
   cuttingServo.write(cuttingStartAngle);
-  delay(500);
+  delay(100);
 
   homeStepper(stepPin1, dirPin1, limitSwitch1, enablePin1, stepper1Homed, stepper1Pos);
   homeStepper(stepPin2, dirPin2, limitSwitch2, enablePin2, stepper2Homed, stepper2Pos);
@@ -463,6 +471,7 @@ void setup() {
   Serial.println("Ready.");
 }
 
+// ===== LOOP =====
 void loop() {
   static bool done = false;
   if (done) return;
@@ -474,72 +483,72 @@ void loop() {
   moveGripperTo(gripperGripAngle);
   delay(1000);
 
-  moveGantryTo(gantryRestAngle);
-  delay(500);
+  moveGantryTo(gantryHomeAngle);
+  delay(100);
 
   moveStepper1(roundsToSteps(plug_stepper1_downRounds), false);
 
   moveStepper2(roundsToSteps(plug_stepper2_digRounds), false);
-  delay(15000);
+  delay(1000);                                                    // for end effector to reach root cutter
 
   performCut();
 
   returnStepper1();
 
   moveGantryTo(gantryDiscardAngle);
-  delay(500);
+  delay(100);
+
+  moveStepper1(roundsToSteps(stepper1_firstDownRounds), false);
 
   returnStepper2();
-  delay(500);
+  delay(100);
 
   // ===== PHASE 2: NEW PLUG & SEED =====
 
   moveGantryTo(gantrySubstratePick);
   delay(2500);
 
-  moveStepper1(roundsToSteps(stepper1_firstDownRounds), false);
-
   moveStepper2(roundsToSteps(stepper2_downRounds), false);
-  delay(500);
+  delay(100);
 
   returnStepper1();
 
-  moveGantryTo(gantryRestAngle);
+  moveGantryTo(gantryHomeAngle);
 
   moveStepper1(roundsToSteps(stepper1_secondDownRounds), false);
 
   returnStepper2();
-  delay(1000);
+  delay(100);
 
   digitalWrite(pumpPin, HIGH);
   pumpActive = true;
-  delay(500);
+  delay(100);
 
   waitForSeedPickup();
 
   moveStepper1(roundsToSteps(stepper1_upRounds), true);
   checkPressureOrHome();
-  delay(200);
+  delay(100);
 
   moveGantryTo(gantrySeedPick);
   checkPressureOrHome();
-  delay(200);
+  delay(100);
 
   moveStepper1(roundsToSteps(stepper1_thirdDownRounds), false);
   checkPressureOrHome();
-  delay(500);
+  delay(100);
 
   digitalWrite(pumpPin, LOW);
   pumpActive = false;
   delay(1500);
 
   returnStepper1();
-  delay(500);
+  delay(100);
 
-  moveGantryTo(gantryRestAngle);
+  moveGantryTo(gantryHomeAngle);
 
   moveGripperTo(gripperOpenAngle);
-  delay(500);
+  delay(100);
 
   done = true;
   Serial.println("Cycle complete. Reset to run again.");
